@@ -54,6 +54,17 @@ class Student
     #            Public Methods           #
     # # # # # # # # # # # # # # # # # # # #
 
+    /**
+     * Obtains the status of the student close account.
+     * @return null|bool TRUE if the student is closed account else FALSE or NULL.
+     */
+    public function isCloseAccount()
+    {
+        if (array_key_exists('close', $this->_data))
+            return $this->_data['close'];
+        return null;
+    }
+
     # # # # # # # # # # # # # # # # # # # #
     #          Protected Methods          #
     # # # # # # # # # # # # # # # # # # # #
@@ -90,4 +101,111 @@ class Student
         return $this->_data;
     }
 
+    /**
+     * Obtains the specified info from the student data.
+     * @param string $name The info to retrieve.
+     * @return null|mixed Teh value of the info.
+     */
+    public function getInfo($name)
+    {
+        if (array_key_exists($name, $this->_data))
+            return $this->_data[$name];
+        return null;
+    }
+
+    /**
+     * Obtains the student login.
+     * @return null|string  The student login or NULL.
+     */
+    public function getLogin()
+    {
+        return $this->getInfo('login');
+    }
+
+    /**
+     * Obtains the student first name.
+     * @return null|string The student first name or NULL.
+     */
+    public function getFirstName()
+    {
+        return $this->getInfo('firstname');
+    }
+
+    /**
+     * Obtains the student last name.
+     * @return null|string The student last name or NULL.
+     */
+    public function getLastName()
+    {
+        return $this->getInfo('lastname');
+    }
+
+    /**
+     * Obtains the student location.
+     * @return null|string The student location (ex: FR/LIL) or NULL.
+     */
+    public function getLocation()
+    {
+        return $this->getInfo('location');
+    }
+
+    /**
+     * Obtains the student promotion.
+     * @return null|int The student promotion or NULL.
+     */
+    public function getPromotion()
+    {
+        return $this->getInfo('promo');
+    }
+
+    /**
+     * Obtains the student picture URL.
+     * @return null|string The student picture URL or NULL.
+     */
+    public function getPictureUrl()
+    {
+        if (($login = $this->getLogin()) !== null)
+            return 'https://cdn.local.epitech.eu/userprofil/profilview/'.$login.'.jpg';
+        return null;
+    }
+
+    /**
+     * Obtains the student miniature picture URL.
+     * @return null|string The student miniature picture URL or NULL.
+     */
+    public function getMiniaturePictureUrl()
+    {
+        if (($login = $this->getLogin()) !== null)
+            return 'https://cdn.local.epitech.eu/userprofil/commentview/'.$login.'.jpg';
+        return null;
+    }
+
+    /**
+     * Obtains the student GPA.
+     * @return null|float The student GPA or NULL.
+     */
+    public function getGPA()
+    {
+        if (array_key_exists('gpa', $this->_data))
+            return (float)$this->_data['gpa'][0]['gpa'];
+        return null;
+    }
+
+    /**
+     * Obtains the student year.
+     * @return int|null The student year or NULL.
+     */
+    public function getYear()
+    {
+        return $this->getInfo('studentyear');
+    }
+
+    /**
+     * Obtains the student semester.
+     * @return int|null The student semester or NULL.
+     */
+    public function getSemester()
+    {
+        return $this->getInfo('semester');
+    }
 } 
