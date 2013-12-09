@@ -39,7 +39,7 @@ class Student
     public function __construct(Connector $connector, $login)
     {
         // Checking the authentication
-        if ($connector->getSignedIn() === false)
+        if ($connector->isSignedIn() === false)
             throw new \Exception('EpitechAPI: You must be authenticated');
 
         // Initializing the attributes
