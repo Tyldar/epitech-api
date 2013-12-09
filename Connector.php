@@ -137,9 +137,9 @@ class Connector
         ));
 
         // Checking the authentication
-        if ($authentication === false)
-            $this->_is_signed_in = false;
-        else
+        if ($authentication !== false && !empty($authentication) && preg_match("#Anonymous#", $authentication) == false)
             $this->_is_signed_in = true;
+        else
+            $this->_is_signed_in = false;
     }
 } 
