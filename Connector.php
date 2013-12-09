@@ -35,7 +35,7 @@ class Connector
      * Contains the status of the authentication
      * @var bool
      */
-    protected $_signed_in;
+    protected $_is_signed_in;
 
     /**
      * Contains the cookies file name
@@ -57,7 +57,7 @@ class Connector
         // Initializing the attributes
         $this->_login = $login;
         $this->_password = $password;
-        $this->_signed_in = false;
+        $this->_is_signed_in = false;
         $this->_cookies_file = '/tmp/EpitechAPI_'.uniqid();
 
         // Signing in
@@ -106,6 +106,15 @@ class Connector
         return $res;
     }
 
+    /**
+     * Obtains the authentication status.
+     * @return bool Returns TRUE if authenticated else FALSE.
+     */
+    public function isSignedIn()
+    {
+        return $this->_is_signed_in;
+    }
+
     # # # # # # # # # # # # # # # # # # # #
     #          Protected Methods          #
     # # # # # # # # # # # # # # # # # # # #
@@ -129,25 +138,8 @@ class Connector
 
         // Checking the authentication
         if ($authentication === false)
-            $this->_signed_in = false;
+            $this->_is_signed_in = false;
         else
-            $this->_signed_in = true;
-    }
-    
-    # # # # # # # # # # # # # # # # # # # #
-    #           Private Methods           #
-    # # # # # # # # # # # # # # # # # # # #
-
-    # # # # # # # # # # # # # # # # # # # #
-    #         Getters and Setters         #
-    # # # # # # # # # # # # # # # # # # # #
-
-    /**
-     * Obtains the authentication status.
-     * @return bool Returns TRUE if authenticated else FALSE.
-     */
-    public function getSignedIn()
-    {
-        return $this->_signed_in;
+            $this->_is_signed_in = true;
     }
 } 
