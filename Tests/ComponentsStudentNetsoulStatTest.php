@@ -7,13 +7,18 @@ if ($connector->isSignedIn())
 else
     echo "EpitechAPI::Connector - Authentication failure".PHP_EOL;
 
-$student = new \EpitechAPI\Components\StudentNetsoulStats($connector, 'defrei_r');
-print_r($student->getData());
+$netsoul = new \EpitechAPI\Components\StudentNetsoulStats($connector, 'defrei_r');
+print_r($netsoul);
 
-var_dump($student->getRange());
+var_dump($netsoul->getRange());
 
 $date = new DateTime();
 $date->setTimestamp(time() - 60 * 60 * 25);
-var_dump($student->getStatsFromDateTime($date));
+var_dump($netsoul->getStatsFromDateTime($date));
 
-var_dump($student->getStatsFromTimestamp(time() - 60 * 60 * 25));
+var_dump($netsoul->getStatsFromTimestamp(time() - 60 * 60 * 25));
+
+
+$start = time() - 60 * 60 * 24 * 7;
+$end = time();
+print_r($netsoul->getStatsBetweenTimeStamp($start, $end));

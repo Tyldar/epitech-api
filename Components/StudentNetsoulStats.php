@@ -26,6 +26,8 @@ class StudentNetsoulStats
      */
     protected $_data;
 
+    protected $_stats;
+
     # # # # # # # # # # # # # # # # # # # #
     #             Magic Methods           #
     # # # # # # # # # # # # # # # # # # # #
@@ -46,6 +48,7 @@ class StudentNetsoulStats
         // Initializing the attributes
         $this->_connector = $connector;
         $this->_data = array();
+        $this->_stats = null;
 
         // Parsing the data
         $this->parse($login);
@@ -123,34 +126,22 @@ class StudentNetsoulStats
      */
     public function getStats()
     {
-        $stats = array();
+        // Making the stats if it's the first time
+        if ($this->_stats === null) {
+            $this->_stats = array();
 
-        // Making the array of the stats
-        foreach ($this->_data as $data) {
-            $stats[$data[0]] = array(
-                'time_idle' => $data[2],
-                'timeout_active' => $data[3],
-                'timeout_idle' => $data[4],
-                'time_average' => $data[5]
-            );
+            // Making the array of the stats
+            foreach ($this->_data as $data) {
+                $this->_stats[$data[0]] = array(
+                    'time_idle' => $data[2],
+                    'timeout_active' => $data[3],
+                    'timeout_idle' => $data[4],
+                    'time_average' => $data[5]
+                );
+            }
         }
 
-        return $stats;
-    }
-
-    /**
-     * Obtains the data of the specified midnight timestamp.
-     * @param int $midnight_timestamp The midnight timestamp.
-     * @return null|array
-     */
-    public function getDataFromMidnightTimestamp($midnight_timestamp)
-    {
-        // Browsing the data to find the midnight timestamp
-        foreach ($this->_data as $data)
-            if ($data[0] === $midnight_timestamp)
-                return $data;
-
-        return null;
+        return $this->_stats;
     }
 
     /**
@@ -160,21 +151,11 @@ class StudentNetsoulStats
      */
     public function getStatsFromTimestamp($timestamp)
     {
-        // Getting the stats for the midnight timestamp
+        // Calculating the midnight timestamp
         $midnight_timestamp = strtotime('today', $timestamp);
-        if (($data = $this->getDataFromMidnightTimestamp($midnight_timestamp)) === null)
-            return null;
-
-        // Making the array
-        $stats = array(
-            'time_active' => $data[1],
-            'time_idle' => $data[2],
-            'timeout_active' => $data[3],
-            'timeout_idle' => $data[4],
-            'time_average' => $data[5]
-        );
-
-        return $stats;
+        if (array_key_exists($midnight_timestamp, $this->getStats()))
+            return $this->_stats[$midnight_timestamp];
+        return null;
     }
 
     /**
@@ -184,21 +165,41 @@ class StudentNetsoulStats
      */
     public function getStatsFromDateTime(\DateTime $date)
     {
-        // Getting the stats for the midnight timestamp
-        $midnight_timestamp = strtotime('today', $date->getTimestamp());
-        if (($data = $this->getDataFromMidnightTimestamp($midnight_timestamp)) === null)
-            return null;
+        return $this->getStatsFromTimestamp($date->getTimestamp());
+    }
+
+    /**
+     * Obtains the stats between the specified start and end timestamps.
+     * @param int $start The start timestamp.
+     * @param int $end The end timestamp
+     * @return array
+     */
+    public function getStatsBetweenTimeStamp($start, $end)
+    {
+        // Calculating the midnight timestamps
+        $midnight_start_timestamp = strtotime('today', $start);
+        $midnight_end_timestamp = strtotime('today', $end);
+
+        $stats = array();
 
         // Making the array
-        $stats = array(
-            'time_active' => $data[1],
-            'time_idle' => $data[2],
-            'timeout_active' => $data[3],
-            'timeout_idle' => $data[4],
-            'time_average' => $data[5]
-        );
+        foreach ($this->getStats() as $midnight_timestamp => $cur_stats)
+            if ($midnight_timestamp >= $midnight_start_timestamp && $midnight_timestamp <= $midnight_end_timestamp)
+                $stats[$midnight_timestamp] = $cur_stats;
+            else if ($midnight_timestamp > $midnight_end_timestamp)
+                break;
 
         return $stats;
     }
 
+    /**
+     * Obtains the stats between the specified start and end DateTime.
+     * @param \DateTime $start The start DateTime.
+     * @param \DateTime $end The end DateTime.
+     * @return array
+     */
+    public function getStatsBetweenDateTime(\DateTime $start, \DateTime $end)
+    {
+        return $this->getStatsBetweenTimeStamp($start->getTimestamp(), $end->getTimestamp());
+    }
 } 
