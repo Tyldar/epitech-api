@@ -1,6 +1,11 @@
 # EpitechAPI
 An easy and modular API to request information from the Epitech's intranet
 
+# Installation
+The EpitechAPI library use cURL extension and PHP.
+* [PHP](http://www.php.net/)
+* [cURL extension](http://php.net/manual/fr/book.curl.php/)
+
 # Getting started
 The EpitechAPI must be easy to use
 
