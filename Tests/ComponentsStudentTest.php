@@ -6,3 +6,6 @@ if ($connector->isSignedIn())
     echo "EpitechAPI::Connector - Authenticated".PHP_EOL;
 else
     echo "EpitechAPI::Connector - Authentication failure".PHP_EOL;
+
+$student = new \EpitechAPI\Components\Student($connector, 'defrei_r');
+var_dump($student->getData());
