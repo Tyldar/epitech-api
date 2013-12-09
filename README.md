@@ -42,6 +42,17 @@ $student = new EpitechAPI\Components\Student($connector, 'defrei_r');
 print_r($student->getData()); // Displays the information about 'defrei_r'
 ```
 
+## `EpitechAPI\Components\StudentNetsoulStats`
+This class provides netsoul stats about a specified student.
+
+```
+$netsoul = new EpitechAPI\Components\StudentNetsoulStats($connector, 'defrei_r');
+
+print_r($netsoul->getData()); // Displays the information about 'defrei_r'
+print_r($netsoul->getStats());
+print_r($netsoul->getStatsFromDateTime(new DateTime()));
+```
+
 # Modularity
 Since the components use the `EpitechAPI\Connector` class, the components can be diversified !
 You can contribuate and share your own components for a better EpitechAPI !
@@ -50,7 +61,6 @@ You can contribuate and share your own components for a better EpitechAPI !
 * Signed in schedule: https://intra.epitech.eu/planning/load?format=json  [&start=<DATE START>&end=<DATE END>]
 * Signed in personal-schedules: https://intra.epitech.eu/planning/my-schedules?format=json
 * Signed in modules: https://intra.epitech.eu/module/board/?format=json   [&start=<DATE START>&end=<DATE END>]
-* User Netsoul stats: https://intra.epitech.eu/user/{LOGIN}/netsoul/?format=json
 * Signed in notification missed: https://intra.epitech.eu/user/{LOGIN}/notification/missed/?format=json
 
 And much more when you sniff the HTTP packets from the intranet ;)
