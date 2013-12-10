@@ -26,6 +26,12 @@ class Student
      */
     protected $_data;
 
+    /**
+     * Contains the Netsoul stats.
+     * @var StudentNetsoulStats
+     */
+    protected $_netsoul_stats;
+
     # # # # # # # # # # # # # # # # # # # #
     #             Magic Methods           #
     # # # # # # # # # # # # # # # # # # # #
@@ -45,6 +51,7 @@ class Student
         // Initializing the attributes
         $this->_connector = $connector;
         $this->_data = array();
+        $this->_netsoul_stats = null;
 
         // Parsing the data
         $this->parse($login);
@@ -207,5 +214,16 @@ class Student
     public function getSemester()
     {
         return $this->getInfo('semester');
+    }
+
+    /**
+     * Obtains the Netsoul stats of this student.
+     * @return StudentNetsoulStats The StudentNetsoulStats object.
+     */
+    public function getNetsoulStats()
+    {
+        if ($this->_netsoul_stats === null)
+            $this->_netsoul_stats = new StudentNetsoulStats($this->_connector, $this->getLogin());
+        return $this->_netsoul_stats;
     }
 } 

@@ -1,5 +1,6 @@
 <?php
 namespace EpitechAPI;
+use EpitechAPI\Components\Student;
 
 /**
  * Class Connector manages the connection from the intranet.
@@ -43,6 +44,8 @@ class Connector
      */
     protected $_cookies_file;
 
+    protected $_student;
+
     # # # # # # # # # # # # # # # # # # # #
     #             Magic Methods           #
     # # # # # # # # # # # # # # # # # # # #
@@ -59,6 +62,7 @@ class Connector
         $this->_password = $password;
         $this->_is_signed_in = false;
         $this->_cookies_file = '/tmp/EpitechAPI_'.uniqid();
+        $this->_student = null;
 
         // Signing in
         $this->sign_in();
@@ -141,5 +145,20 @@ class Connector
             $this->_is_signed_in = true;
         else
             $this->_is_signed_in = false;
+    }
+
+    # # # # # # # # # # # # # # # # # # # #
+    #         Getters and Setters         #
+    # # # # # # # # # # # # # # # # # # # #
+
+    /**
+     * Obtains the Student object of the authenticated student.
+     * @return Student The Student object representing the student authenticated.
+     */
+    public function getStudent()
+    {
+        if ($this->_student == null)
+            $this->_student = new Student($this, $this->_login);
+        return $this->_student;
     }
 } 
