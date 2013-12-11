@@ -32,3 +32,5 @@ var_dump($student->getYear());
 echo PHP_EOL;
 var_dump($student->getSemester());
 echo PHP_EOL;
+var_dump($student->getGroups());
+echo PHP_EOL;

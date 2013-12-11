@@ -217,6 +217,19 @@ class Student
     }
 
     /**
+     * Obtains the student groups.
+     * @return array
+     */
+    public function getGroups()
+    {
+        $groups_info = $this->getInfo('groups');
+        $groups = array();
+        foreach ($groups_info as $group)
+            $groups[$group['name']] = $group['name'];
+        return $groups;
+    }
+
+    /**
      * Obtains the Netsoul stats of this student.
      * @return StudentNetsoulStats The StudentNetsoulStats object.
      */
