@@ -1,7 +1,7 @@
 # EpitechAPI
 An easy and modular API to request information from the Epitech's intranet
 
-[![Build Status](https://travis-ci.org/Raphy/epitech-api.png?branch=master)](https://travis-ci.org/Raphy/epitech-api)
+[![Build Status](https://travis-ci.org/Raphy/epitech-api.png?branch=master)](https://travis-ci.org/Raphy/epitech-api) [![Latest Stable Version](https://poser.pugx.org/Raphy/epitech-api/v/stable.png)](https://packagist.org/packages/Raphy/epitech-api) [![Total Downloads](https://poser.pugx.org/Raphy/epitech-api/downloads.png)](https://packagist.org/packages/Raphy/epitech-api) [![Latest Unstable Version](https://poser.pugx.org/Raphy/epitech-api/v/unstable.png)](https://packagist.org/packages/Raphy/epitech-api) [![License](https://poser.pugx.org/Raphy/epitech-api/license.png)](https://packagist.org/packages/Raphy/epitech-api)
 
 # Installation
 The EpitechAPI library use cURL extension and PHP.
@@ -68,3 +68,6 @@ You can contribuate and share your own components for a better EpitechAPI !
 * Signed in notification missed: https://intra.epitech.eu/user/{LOGIN}/notification/missed/?format=json
 
 And much more when you sniff the HTTP packets from the intranet ;)
+
+# Todo list
+* Make unit tests (but how ?)
