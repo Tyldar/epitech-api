@@ -6,7 +6,7 @@ The EpitechAPI library use cURL extension and PHP.
 * [PHP](http://www.php.net/)
 * [cURL extension](http://php.net/manual/fr/book.curl.php/)
 
-You can use [Composer](https://getcomposer.org/) on adding the dependency `raphy/EpitechAPI`
+You can use [Composer](https://getcomposer.org/) on adding the dependency `raphy/epitech-api`
 
 # Getting started
 The EpitechAPI must be easy to use
