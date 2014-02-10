@@ -1,6 +1,8 @@
 # EpitechAPI
 An easy and modular API to request information from the Epitech's intranet
 
+[![Build Status](https://travis-ci.org/Raphy/epitech-api.png?branch=master)](https://travis-ci.org/Raphy/epitech-api)
+
 # Installation
 The EpitechAPI library use cURL extension and PHP.
 * [PHP](http://www.php.net/)
