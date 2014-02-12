@@ -17,6 +17,6 @@
         "phpunit/phpunit": "3.7.31"
     },
     "autoload": {
-        "psr-0": { "EpitechAPI\\": "src/EpitechAPI" }
+        "psr-4": { "EpitechAPI\\": "src" }
     }
 }
