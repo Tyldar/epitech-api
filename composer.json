@@ -5,7 +5,8 @@
     "authors": [
         {
             "name": "Raphael De Freitas",
-            "email": "raphael.defreitas@epitech.eu"
+            "email": "raphael.defreitas@epitech.eu",
+            "homepage": "http://raphaeldefreitas.com"
         }
     ],
     "require": {
