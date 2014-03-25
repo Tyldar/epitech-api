@@ -98,6 +98,14 @@ class Student
     # # # # # # # # # # # # # # # # # # # #
     #         Getters and Setters         #
     # # # # # # # # # # # # # # # # # # # #
+	/**
+	 * Obtains the connector
+	 * @return Connector
+	 */
+	public function getConnector()
+	{
+		return ($this->_connector);
+	}
 
     /**
      * Obtains the student data.
