@@ -29,12 +29,6 @@ class StudentMark {
         $this->parse($login);
     }
 
-    public function isCloseAccount() {
-        if (array_key_exists('close', $this->_data))
-            return $this->_data['close'];
-        return null;
-    }
-
     protected function parse($login) {
         // Parsing the URL
         $url = str_replace('{LOGIN}', $login, Settings::URL_USER_MARKS);
