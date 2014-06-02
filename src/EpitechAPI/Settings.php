@@ -27,6 +27,12 @@ class Settings
      */
     const URL_USER_NETSOUL_STATS        = 'https://intra.epitech.eu/user/{LOGIN}/netsoul/?format=json';
 
+    /*
+     * The URL to get user's marks
+     */
+    
+    const URL_USER_MARKS                = 'https://intra.epitech.eu/user/{LOGIN}/notes/?format=json';
+    
     /**
      * The cURL timeout
      */
