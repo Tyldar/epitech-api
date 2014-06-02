@@ -57,6 +57,19 @@ print_r($netsoul->getStats());
 print_r($netsoul->getStatsFromDateTime(new DateTime()));
 ```
 
+## `EpitechAPI\Components\StudentMark`
+This class provides the modules and the marks of a student
+
+```
+$student = new EpitechAPI\Components\StudentNetsoulStats($connector, 'login');
+
+print_r($student->getData()); // Displays an array with all modules and marks
+print_r($student->getModules()); // Print all the student's modules
+print_r($student->getMarks()); // Print all the student's marks
+print_r($student->getModuleMarks('B-ADS-350')); // Print the student's marks for the module B-ADS-350
+echo $student->getModuleAverage('B-ADS-350', 4); // Print the student's average for the module B-ADS-350 with a 4 precision
+```
+
 # Modularity
 Since the components use the `EpitechAPI\Connector` class, the components can be diversified !
 You can contribuate and share your own components for a better EpitechAPI !
