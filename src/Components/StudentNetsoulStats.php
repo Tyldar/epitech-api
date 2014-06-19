@@ -1,12 +1,14 @@
 <?php
 namespace EpitechAPI\Components;
+
 use EpitechAPI\Connector;
 use EpitechAPI\Settings;
 
 /**
  * Class StudentNetsoulStats provides information about the Netsoul stats from a student.
+ *
  * @package EpitechAPI\Components
- * @author Raphael DE FREITAS <raphythegeek@gmail.com>
+ * @author  Raphael DE FREITAS <raphythegeek@gmail.com>
  */
 class StudentNetsoulStats
 {
@@ -16,12 +18,14 @@ class StudentNetsoulStats
 
     /**
      * Contains the connector.
+     *
      * @var \EpitechAPI\Connector
      */
     protected $_connector;
 
     /**
      * Contains the student data
+     *
      * @var array
      */
     protected $_data;
@@ -35,8 +39,10 @@ class StudentNetsoulStats
 
     /**
      * Initializes a new instance of this class and retrieves the netsoul stats of the specified student login.
+     *
      * @param Connector $connector The connector.
-     * @param string $login The student login.
+     * @param string    $login     The student login.
+     *
      * @throws \Exception If the connector is not signed in.
      */
     public function __construct(Connector $connector, $login)
@@ -47,8 +53,8 @@ class StudentNetsoulStats
 
         // Initializing the attributes
         $this->_connector = $connector;
-        $this->_data = array();
-        $this->_stats = null;
+        $this->_data      = array();
+        $this->_stats     = null;
 
         // Parsing the data
         $this->parse($login);
@@ -64,7 +70,9 @@ class StudentNetsoulStats
 
     /**
      * Parses the cURL request of the specified student login.
+     *
      * @param string $login The student login.
+     *
      * @throws \Exception If json_decode() fails.
      */
     protected function parse($login)
@@ -73,12 +81,13 @@ class StudentNetsoulStats
         $url = str_replace('{LOGIN}', $login, Settings::URL_USER_NETSOUL_STATS);
 
         // Parsing the request content
-        $json_content = $this->_connector->request($url);
+        $response     = $this->_connector->request($url);
+        $json_content = $response['response'];
         $json_content = str_replace("// Epitech JSON webservice ...\n", "", $json_content);
 
         // Setting the user data
         if (($this->_data = json_decode($json_content, true)) === null)
-            throw new \Exception('EpitechAPI::User: The JSON content is not valid: '.json_last_error_msg());
+            throw new \Exception('EpitechAPI::User: The JSON content is not valid: ' . json_last_error_msg());
     }
 
     # # # # # # # # # # # # # # # # # # # #
@@ -87,6 +96,7 @@ class StudentNetsoulStats
 
     /**
      * Obtains the student netsoul stat data.
+     *
      * @return array
      */
     public function getData()
@@ -96,6 +106,7 @@ class StudentNetsoulStats
 
     /**
      * Obtains an array of the date range of the netsoul stats.
+     *
      * @return array The array (start => DateTime object, end => DateTime object) of the range.
      */
     public function getRange()
@@ -113,7 +124,7 @@ class StudentNetsoulStats
 
             $range = array(
                 'start' => $start,
-                'end' => $end
+                'end'   => $end
             );
         }
 
@@ -122,6 +133,7 @@ class StudentNetsoulStats
 
     /**
      * Obtains the array of the netsoul stats.
+     *
      * @return array The array (midnight timestamp => array()) of the netsoul stats.
      */
     public function getStats()
@@ -133,10 +145,10 @@ class StudentNetsoulStats
             // Making the array of the stats
             foreach ($this->_data as $data) {
                 $this->_stats[$data[0]] = array(
-                    'time_idle' => $data[2],
+                    'time_idle'      => $data[2],
                     'timeout_active' => $data[3],
-                    'timeout_idle' => $data[4],
-                    'time_average' => $data[5]
+                    'timeout_idle'   => $data[4],
+                    'time_average'   => $data[5]
                 );
             }
         }
@@ -146,7 +158,9 @@ class StudentNetsoulStats
 
     /**
      * Obtains the netsoul stats from the specified timestamp.
+     *
      * @param int $timestamp The midnight timestamp.
+     *
      * @return array|null
      */
     public function getStatsFromTimestamp($timestamp)
@@ -155,12 +169,15 @@ class StudentNetsoulStats
         $midnight_timestamp = strtotime('today', $timestamp);
         if (array_key_exists($midnight_timestamp, $this->getStats()))
             return $this->_stats[$midnight_timestamp];
+
         return null;
     }
 
     /**
      * Obtains the netsoul stats form the specified DateTime
+     *
      * @param \DateTime $date The DateTime.
+     *
      * @return array|null
      */
     public function getStatsFromDateTime(\DateTime $date)
@@ -170,15 +187,17 @@ class StudentNetsoulStats
 
     /**
      * Obtains the stats between the specified start and end timestamps.
+     *
      * @param int $start The start timestamp.
-     * @param int $end The end timestamp
+     * @param int $end   The end timestamp
+     *
      * @return array
      */
     public function getStatsBetweenTimeStamp($start, $end)
     {
         // Calculating the midnight timestamps
         $midnight_start_timestamp = strtotime('today', $start);
-        $midnight_end_timestamp = strtotime('today', $end);
+        $midnight_end_timestamp   = strtotime('today', $end);
 
         $stats = array();
 
@@ -194,8 +213,10 @@ class StudentNetsoulStats
 
     /**
      * Obtains the stats between the specified start and end DateTime.
+     *
      * @param \DateTime $start The start DateTime.
-     * @param \DateTime $end The end DateTime.
+     * @param \DateTime $end   The end DateTime.
+     *
      * @return array
      */
     public function getStatsBetweenDateTime(\DateTime $start, \DateTime $end)

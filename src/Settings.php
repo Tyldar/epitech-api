@@ -15,7 +15,7 @@ class Settings
     /**
      * The URL to submit the sign in form
      */
-    const URL_SIGN_IN                   = 'https://intra.epitech.eu/';
+    const URL_SIGN_IN                   = 'https://intra.epitech.eu/?format=json';
 
     /**
      * The URL to get the user information
