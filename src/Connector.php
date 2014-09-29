@@ -79,7 +79,8 @@ class Connector
      */
     public function __destruct()
     {
-        unlink($this->_cookies_file);
+        if (file_exists($this->_cookies_file))
+           unlink($this->_cookies_file);
     }
 
     # # # # # # # # # # # # # # # # # # # #
