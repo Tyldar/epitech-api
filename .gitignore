@@ -1,8 +1,0 @@
-# Composer files
-vendor
-composer.phar
-composer.lock
-
-# IDE and Editors
-.idea
-*~
