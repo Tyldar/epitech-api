@@ -110,9 +110,7 @@ class User implements IComponent
      */
     public function getLogin()
     {
-        if (array_key_exists('login', $this->data))
-            return $this->data['login'];
-        return null;
+        return $this->getData('login');
     }
 
     /**
@@ -122,9 +120,7 @@ class User implements IComponent
      */
     public function getFirstName()
     {
-        if (array_key_exists('firstname', $this->data))
-            return $this->data['firstname'];
-        return null;
+        return $this->getData('firstname');
     }
 
     /**
@@ -134,9 +130,7 @@ class User implements IComponent
      */
     public function getLastName()
     {
-        if (array_key_exists('lastname', $this->data))
-            return $this->data['lastname'];
-        return null;
+        return $this->getData('lastname');
     }
 
     /**
@@ -146,9 +140,7 @@ class User implements IComponent
      */
     public function getFullName()
     {
-        if (array_key_exists('title', $this->data))
-            return $this->data['title'];
-        return null;
+        return $this->getData('title');
     }
 
     /**
@@ -158,9 +150,7 @@ class User implements IComponent
      */
     public function getIsClosed()
     {
-        if (array_key_exists('close', $this->data))
-            return $this->data['close'];
-        return null;
+        return $this->getData('close');
     }
 
     /**
@@ -170,9 +160,7 @@ class User implements IComponent
      */
     public function getIsAdmin()
     {
-        if (array_key_exists('admin', $this->data))
-            return $this->data['admin'];
-        return null;
+        return $this->getData('admin');
     }
 
     /**
@@ -182,9 +170,7 @@ class User implements IComponent
      */
     public function getGroups()
     {
-        if (array_key_exists('groups', $this->data))
-            return $this->data['groups'];
-        return null;
+        return $this->getData('groups');
     }
 
     /**
@@ -226,9 +212,7 @@ class User implements IComponent
      */
     public function getLocation()
     {
-        if (array_key_exists('location', $this->data))
-            return $this->data['location'];
-        return null;
+        return $this->getData('location');
     }
 
     /**
@@ -244,6 +228,19 @@ class User implements IComponent
     # # # # # # # # # # # # # # # # # # # #
     #           Private Methods           #
     # # # # # # # # # # # # # # # # # # # #
+
+    /**
+     * Obtains the data for the specified key.
+     *
+     * @param string $key The data key.
+     * @return null|mixed
+     */
+    protected function getData($key)
+    {
+        if (array_key_exists($key, $this->data))
+            return $this->data[$key];
+        return null;
+    }
 
     /**
      * Parse the response
