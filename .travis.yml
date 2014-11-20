@@ -10,9 +10,9 @@ script: "./vendor/bin/phpunit"
 notifications:
     email:
         - raphael.defreitas@epitech.eu
+
 env:
     global:
-        - secure: E+gKztNTOwYCxUm503f+3y041oyE7yLh3ayrmfdF2UzOJx3LWlRUSQfJsE7Z9P2IggPQytBpoiWiWVZwQwNRrEYfkZ3lOIavefVmi62LKKwE2x9fKAhOUO3GZw7OtzL4QXGZtWep4repIE84WrAsq68ecVZlmIMg7dXuno8RcSM= # INTRANET_LOGIN
-        - secure: bsqBGOUDoKCmWOw4pGyX0Eu+O/V6njL/a4gmNHVIDx37p59Ga6E/7ABcWSi3o7Dk6coIh+EeNQZi2NH/nJvTr4soLPkNYscdznJsnoPGx54Fna77AtrPN46oekXjxxruN5A3GM8b2oD58Fb5m/H8YNPzkwLM0xZoCep15Y0qImI= # INTRANET_PASSWORD
-        - secure: N7clYk1J8rgg+uJls9tjG7TvGZ+3nPrWM1S/wbeTPT0W5Mvn2FUULuuXlo9bnNBKqdtvXsB+jlAx3RoDwtGEoiSXyxlyIzlwVRxcy2qqXoLMXwFqWoDiHKJ1HXPObMM4mn30vpUUMBpo8bAEL0SU0mlbtCzdqvirDZpXyw1TIKY= # INTRANET_AUTOLOGIN_LINK
-
+        - secure: ag7UTctsEv/8Ztp9JtEFi+YcZuQS1PO4E4pcW54gKT8LhyBOcBhefQ2bTF7s9Kzhhv7Y8/Qy6ifM5GA/mw9b1SAzWZP0EHllm3qq7Ibe3pKKHLSuKHdvJzWi+zVuU82rldjYH2FBmT6MP3pZY84JvfPUJ6uUgHa5gS+TH2WYK8A= # INTRANET_LOGIN
+        - secure: EEEbppxO2+AQR54qviv9zQpZ4wNusUA4pEqDjFldovM/1QCsGhPo8Bp69PWlXo4Smeg+ymA4cyzK3yPZmjEdIUe+82jJ+vPHzxzoovrPr0/cbSZ+b5QjIkpT9gHW0ZnGqpzCNBDtx1BkbOEqbKhVKsk8XUwA3VVSRkUMpwcbppw= # INTRANET_PASSWORD
+        - secure: KmBFpjNZw0kELZGQEY8ELEX7g8A3U2SkMGqmrbggYVMV9gi1IVe93qNLBZEU2QxJkZ7U2fvjHHcdbGGB6cqbu2lpw3inAP3c5ya8e/EKx1w7c6Udv4qvhqsGlJ67lLj8Et4xay37e57snn8YwH49E1HGFAq1PFLO5L9ruof/u00= # INTRANET_AUTOLOGIN_LINK
