@@ -1,6 +1,8 @@
 # EpitechAPI
 An easy and modular API to request information from the Epitech's intranet.
 
+**I'm currently re-writting the project to make a v2. Don't use it for production projects but for testing.**
+
 # Installation
 The EpitechAPI library use PHP and its cURL extension
 * [PHP >= 5.4](http://www.php.net/)
@@ -8,7 +10,7 @@ The EpitechAPI library use PHP and its cURL extension
 
 You can use [Composer](https://getcomposer.org/) on adding the dependency `raphy/epitech-api` with the command :
 ``` bash
-$ php composer.phar require raphy/epitech-api "~2.0"
+$ php composer.phar require raphy/epitech-api "2.*@dev"
 ```
 
 # Documentation
