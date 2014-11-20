@@ -64,7 +64,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
                 $user->getLogin(),
                 $user->getIsAdmin(),
                 $user->getIsClosed(),
-                $user->getPicture()
+                $user->getPicture(),
             );
 
             $this->assertEquals($expected, $user_data);
