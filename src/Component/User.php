@@ -104,6 +104,16 @@ class User implements IComponent
     # # # # # # # # # # # # # # # # # # # #
 
     /**
+     * Obtains the picture Url.
+     *
+     * @return null|string
+     */
+    public function getPicture()
+    {
+        return $this->getData('picture');
+    }
+
+    /**
      * Obtains the login.
      *
      * @return null|string

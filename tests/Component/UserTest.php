@@ -20,7 +20,8 @@ class UserTest extends \PHPUnit_Framework_TestCase
             'FR/LIL',
             'defrei_r',
             false,
-            false
+            false,
+            'https://cdn.local.epitech.eu/userprofil/profilview/defrei_r.jpg'
         ),
         'wiart_m' => array(
             'Mickael',
@@ -37,7 +38,8 @@ class UserTest extends \PHPUnit_Framework_TestCase
             'FR/LIL',
             'wiart_m',
             true,
-            false
+            false,
+            'https://cdn.local.epitech.eu/userprofil/profilview/wiart_m.jpg'
         )
     );
 
@@ -61,7 +63,8 @@ class UserTest extends \PHPUnit_Framework_TestCase
                 $user->getLocation(),
                 $user->getLogin(),
                 $user->getIsAdmin(),
-                $user->getIsClosed()
+                $user->getIsClosed(),
+                $user->getPicture()
             );
 
             $this->assertEquals($expected, $user_data);
