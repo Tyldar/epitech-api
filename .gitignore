@@ -1,0 +1,15 @@
+# Composer files
+/vendor
+composer.phar
+composer.lock
+/bin/
+
+# IDE and Editors
+/.idea
+*~
+
+# Unit test files
+/report
+
+# Private scripts
+travis.sh
