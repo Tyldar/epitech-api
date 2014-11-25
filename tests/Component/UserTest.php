@@ -68,7 +68,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
             );
 
             $this->assertEquals($user_data_expected, $user_data);
-            $this->assertEquals($connector, $user->getConnector());
         }
     }
 
