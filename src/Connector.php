@@ -3,6 +3,9 @@ namespace EpitechAPI;
 
 use EpitechAPI\Component\User;
 
+/**
+ * Class Connector is the main class of the API. It allows request from intranet and authenticate an user.
+ */
 class Connector
 {
     # # # # # # # # # # # # # # # # # # # #
