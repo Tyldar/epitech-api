@@ -1,5 +1,5 @@
 <?php
-namespace EpitechAPI\Tools;
+namespace EpitechAPI\Tool;
 
 /**
  * Class DataExtractor is a tool to extract data.

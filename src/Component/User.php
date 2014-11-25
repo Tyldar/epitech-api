@@ -2,7 +2,7 @@
 namespace EpitechAPI\Component;
 
 use EpitechAPI\Connector;
-use EpitechAPI\Tools\DataExtractor;
+use EpitechAPI\Tool\DataExtractor;
 
 /**
  * Class User represent an Epitech user.
