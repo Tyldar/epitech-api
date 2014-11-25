@@ -43,7 +43,7 @@ class User
     protected $data;
 
     /**
-     * Contains the « Netsoul » component
+     * Contains the « Netsoul » component.
      *
      * @var Netsoul
      */
@@ -62,10 +62,7 @@ class User
      */
     public function __construct(Connector $connector, $login = null)
     {
-        // If the use is not signed in, we can't use this component.
-        if (!$connector->isSignedIn())
-            throw new \Exception("The Connector is not signed in");
-
+        $connector->checkSignedIn();
         $this->connector = $connector;
 
         // Retrieving information about the specified user or signed in user
@@ -114,7 +111,7 @@ class User
     }
 
     /**
-     * Obtains the first name
+     * Obtains the first name.
      *
      * @return null|string
      */
@@ -124,7 +121,7 @@ class User
     }
 
     /**
-     * Obtains the last name
+     * Obtains the last name.
      *
      * @return null|string
      */
@@ -144,7 +141,7 @@ class User
     }
 
     /**
-     * Obtains whether is closed account
+     * Obtains whether is closed account.
      *
      * @return null|bool
      */
@@ -154,7 +151,7 @@ class User
     }
 
     /**
-     * Obtains wheter is an admin
+     * Obtains whether is an admin.
      *
      * @return null|bool
      */
@@ -164,7 +161,7 @@ class User
     }
 
     /**
-     * Obtains the groups
+     * Obtains the groups.
      *
      * @return null|array
      */
@@ -174,7 +171,7 @@ class User
     }
 
     /**
-     * Obtains the groups name
+     * Obtains the groups name.
      *
      * @return array|null
      */
@@ -193,7 +190,7 @@ class User
     }
 
     /**
-     * Obtains the groups title
+     * Obtains the groups title.
      *
      * @return array|null
      */
@@ -211,7 +208,7 @@ class User
     }
 
     /**
-     * Obtains the city code (eg. FR/LIL)
+     * Obtains the city code (eg. FR/LIL).
      *
      * @return null|string
      */

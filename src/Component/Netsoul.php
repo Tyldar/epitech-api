@@ -10,6 +10,9 @@ class Netsoul
     #              Constants              #
     # # # # # # # # # # # # # # # # # # # #
 
+    /**
+     * The url to get netsoul data of a user replacing {LOGIN} by the wanted user login.
+     */
     const URL_NETSOUL = 'https://intra.epitech.eu/user/{LOGIN}/netsoul/?format=json';
 
     # # # # # # # # # # # # # # # # # # # #
@@ -43,10 +46,7 @@ class Netsoul
      */
     public function __construct(Connector $connector, $login = null)
     {
-        // If the use is not signed in, we can't use this component.
-        if (!$connector->isSignedIn())
-            throw new \Exception("The Connector is not signed in");
-
+        $connector->checkSignedIn();
         $this->connector = $connector;
 
         // Retrieving information about the specified user or signed in user
