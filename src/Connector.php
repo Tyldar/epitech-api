@@ -233,13 +233,24 @@ class Connector
     }
 
     /**
-     * Obtains whether the student is signed in.
+     * Whether the student is signed in.
      *
      * @return bool
      */
     public function isSignedIn()
     {
         return $this->isSignedIn;
+    }
+
+    /**
+     * Checks if this Connector is signed in. It will throw an exception if not signed in.
+     *
+     * @throws \Exception
+     */
+    public function checkSignedIn()
+    {
+        if (!$this->isSignedIn())
+            throw new \Exception("EpitechAPI : Not Signed In");
     }
 
     # # # # # # # # # # # # # # # # # # # #
