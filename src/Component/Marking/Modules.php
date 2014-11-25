@@ -1,5 +1,5 @@
 <?php
-namespace EpitechAPI\Component;
+namespace EpitechAPI\Component\Marking;
 
 use EpitechAPI\Connector;
 
