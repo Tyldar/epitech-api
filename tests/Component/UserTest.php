@@ -81,7 +81,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
         try {
             new User($connector, 'azerty123');
         } catch (\Exception $ex) {
-            $this->assertEquals('The user is not found', $ex->getMessage());
+            $this->assertEquals('EpitechAPI : Not Found', $ex->getMessage());
         }
     }
 }
