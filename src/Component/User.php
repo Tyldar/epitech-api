@@ -68,15 +68,12 @@ class User
 
         $this->connector = $connector;
 
-        if ($login == null) {
-            // If we don't have the signed in user in memory, get it
-            $response = $this->connector->request(User::SIGNED_IN_USER_URL);
-            $this->data = $this->check($response);
-        } else {
-            // If we don't have the specified user in memory, get it
-            $response = $this->connector->request(str_replace('{LOGIN}', $login, User::USER_URL));
-            $this->data = $this->check($response);
-        }
+        // Retrieving information about the specified user or signed in user
+        if ($login == null)
+            $response = $this->connector->request(self::SIGNED_IN_USER_URL);
+        else
+            $response = $this->connector->request(str_replace('{LOGIN}', $login, self::USER_URL));
+        $this->data = $this->check($response);
     }
 
     # # # # # # # # # # # # # # # # # # # #

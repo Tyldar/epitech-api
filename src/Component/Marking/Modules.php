@@ -12,6 +12,9 @@ class Modules
     #              Constants              #
     # # # # # # # # # # # # # # # # # # # #
 
+    /**
+     * The url to get data of user marks.
+     */
     const MARKS_URL = 'https://intra.epitech.eu/user/{LOGIN}/notes/?format=json';
 
     # # # # # # # # # # # # # # # # # # # #
@@ -51,8 +54,11 @@ class Modules
 
         $this->connector = $connector;
 
-        // Retrieving the modules and activities from intranet for the specified user login
-        $response = $this->connector->request(str_replace('{LOGIN}', $login, self::MARKS_URL));
+        // Retrieving the modules and activities for the specified user or singed in user
+        if ($login == null)
+            $response = $this->connector->request(str_replace('{LOGIN}', $connector->getUser()->getLogin(), self::MARKS_URL));
+        else
+            $response = $this->connector->request(str_replace('{LOGIN}', $login, self::MARKS_URL));
         $data = $this->check($response);
 
         // Shortcuts
@@ -143,6 +149,5 @@ class Modules
 
         return $json;
     }
-
 }
  
