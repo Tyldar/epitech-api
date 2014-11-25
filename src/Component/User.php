@@ -7,7 +7,7 @@ use EpitechAPI\Connector;
 /**
  * Class User represent an Epitech user.
  */
-class User implements IComponent
+class User
 {
     # # # # # # # # # # # # # # # # # # # #
     #              Constants              #
@@ -56,21 +56,17 @@ class User implements IComponent
      * Initializes this component taking the Connector to interact with Epitech's intranet.
      *
      * @param Connector $connector The connector signed in.
+     * @param string $login The login of the user to load data.
      * @throws \Exception If the Connector is not signed in.
      */
-    public function __construct(Connector $connector)
+    public function __construct(Connector $connector, $login = null)
     {
         if (!$connector->isSignedIn())
             throw new \Exception("The Connector is not signed in");
 
         $this->connector = $connector;
 
-        // Getting the function paremeters
-        $parameters = func_get_args();
-
-        if (count($parameters) == 1) {
-            // Getting the signed in student
-
+        if ($login == null) {
             // If we don't have the signed in user in memory, get it
             if (!array_key_exists('signed_in', User::$users)) {
                 $response = $this->connector->request(User::SIGNED_IN_USER_URL);
@@ -82,9 +78,6 @@ class User implements IComponent
             // Retrieving in memory user
             $this->data = User::$users['signed_in'];
         } else {
-            // Getting the specified student
-            $login = $parameters[1];
-
             // If we don't have the specified user in memory, get it
             if (!array_key_exists($login, User::$users)) {
                 $response = $this->connector->request(str_replace('{LOGIN}', $login, User::USER_URL));

@@ -18,5 +18,7 @@ $defrei_r_user = new User($connector, 'defrei_r');
 // ...
 ```
 
+Now browse the class to find the getters which provides user information.
+
 ___
 [Back to index](index.md)
