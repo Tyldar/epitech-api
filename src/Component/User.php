@@ -2,6 +2,7 @@
 namespace EpitechAPI\Component;
 
 use EpitechAPI\Component\Marking\Modules;
+use EpitechAPI\Component\Netsoul\Logs;
 use EpitechAPI\Connector;
 use EpitechAPI\Tool\DataExtractor;
 
@@ -49,6 +50,13 @@ class User
      */
     protected $modules = null;
 
+    /**
+     * Contains the « Netsoul » component
+     *
+     * @var Logs
+     */
+    protected $logs = null;
+
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
     # # # # # # # # # # # # # # # # # # # #
@@ -79,6 +87,18 @@ class User
     # # # # # # # # # # # # # # # # # # # #
     #          Getters / Setters          #
     # # # # # # # # # # # # # # # # # # # #
+
+    /**
+     * Obtains the netsoul logs from « Netsoul » component.
+     *
+     * @return Logs
+     */
+    public function getNetsoulLogs()
+    {
+        if ($this->logs == null)
+            $this->logs = new Logs($this->connector);
+        return $this->logs;
+    }
 
     /**
      * Obtains the modules from « Marking » component
