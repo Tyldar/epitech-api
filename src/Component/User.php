@@ -1,8 +1,7 @@
 <?php
 namespace EpitechAPI\Component;
 
-use EpitechAPI\Component\Marking\Modules;
-use EpitechAPI\Component\Netsoul\Logs;
+use EpitechAPI\Component\Netsoul;
 use EpitechAPI\Connector;
 use EpitechAPI\Tool\DataExtractor;
 
@@ -18,12 +17,12 @@ class User
     /**
      * The url to get data of the signed in user.
      */
-    const SIGNED_IN_USER_URL = 'https://intra.epitech.eu/user/?format=json';
+    const URL_SIGNED_IN_USER = 'https://intra.epitech.eu/user/?format=json';
 
     /**
      * The url to get data of a user replacing {LOGIN} by the wanted user login.
      */
-    const USER_URL = 'https://intra.epitech.eu/user/{LOGIN}/?format=json';
+    const URL_USER = 'https://intra.epitech.eu/user/{LOGIN}/?format=json';
 
     # # # # # # # # # # # # # # # # # # # #
     #              Attributes             #
@@ -37,35 +36,28 @@ class User
     protected $connector;
 
     /**
-     * Contains the user data.
+     * Contains the data.
      *
      * @var array
      */
     protected $data;
 
     /**
-     * Contains the « Marking » component.
-     *
-     * @var Modules
-     */
-    protected $modules = null;
-
-    /**
      * Contains the « Netsoul » component
      *
-     * @var Logs
+     * @var Netsoul
      */
-    protected $logs = null;
+    protected $netsoul = null;
 
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * Initializes this component taking the Connector to interact with Epitech's intranet.
+     * Initializes this component.
      *
      * @param Connector $connector The connector signed in.
-     * @param string $login The login of the user to load data.
+     * @param string $login The login of the user to load data, if null, it will take the signed in user.
      * @throws \Exception If the Connector is not signed in.
      */
     public function __construct(Connector $connector, $login = null)
@@ -78,10 +70,10 @@ class User
 
         // Retrieving information about the specified user or signed in user
         if ($login == null)
-            $response = $this->connector->request(self::SIGNED_IN_USER_URL);
+            $response = $this->connector->request(self::URL_SIGNED_IN_USER);
         else
-            $response = $this->connector->request(str_replace('{LOGIN}', $login, self::USER_URL));
-        $this->data = $this->check($response);
+            $response = $this->connector->request(str_replace('{LOGIN}', $login, self::URL_USER));
+        $this->data = DataExtractor::retrieve($response);
     }
 
     # # # # # # # # # # # # # # # # # # # #
@@ -89,27 +81,16 @@ class User
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * Obtains the netsoul logs from « Netsoul » component.
+     * Obtains the « Netsoul » component.
      *
-     * @return Logs
+     * @return Netsoul
      */
-    public function getNetsoulLogs()
+    public function getNetsoul()
     {
-        if ($this->logs == null)
-            $this->logs = new Logs($this->connector);
-        return $this->logs;
-    }
+        if ($this->netsoul == null)
+            $this->netsoul = new Netsoul($this->connector);
 
-    /**
-     * Obtains the modules from « Marking » component
-     *
-     * @return Modules
-     */
-    public function getModules()
-    {
-        if ($this->modules == null)
-            $this->modules = new Modules($this->connector, $this->getLogin());
-        return $this->modules;
+        return $this->netsoul;
     }
 
     /**
@@ -201,10 +182,13 @@ class User
     {
         if (($groups = $this->getGroups())) {
             $groups_name = array();
+
             foreach ($groups as $group)
                 $groups_name[] = DataExtractor::extract($group, array('name'));
+
             return $groups_name;
         }
+
         return null;
     }
 
@@ -217,8 +201,10 @@ class User
     {
         if (($groups = $this->getGroups())) {
             $groups_title = array();
+
             foreach ($groups as $group)
                 $groups_title[] = DataExtractor::extract($group, array('title'));
+
             return $groups_title;
         }
         return null;
@@ -232,37 +218,5 @@ class User
     public function getLocation()
     {
         return DataExtractor::extract($this->data, array('location'));
-    }
-
-    # # # # # # # # # # # # # # # # # # # #
-    #           Private Methods           #
-    # # # # # # # # # # # # # # # # # # # #
-
-    /**
-     * Checks the response and returns its json content as array
-     *
-     * @param array $response The connector response
-     * @return array The json response
-     * @throws \Exception If the response code is not 200 or if the json response is null
-     */
-    protected function check($response)
-    {
-        // Shortcuts
-        $code = $response['code'];
-        $json = $response['json'];
-
-        // If the response code is 404, the student is not found
-        if ($code == 404)
-            throw new \Exception('The user is not found');
-
-        // If the response code is not 200, the intranet is down ! Again...
-        if ($code !== 200)
-            throw new \Exception('The HTTP response is not 200... Maybe Intranet is down ?!');
-
-        // If the json is null, the response is not a valid json
-        if ($json == null)
-            throw new \Exception('Cannot parse the json response, bad formatted ?!');
-
-        return $json;
     }
 }

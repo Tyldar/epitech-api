@@ -41,19 +41,22 @@ class Connector
      *
      * @var bool
      */
-    private $isSignedIn = false;
+    protected $isSignedIn = false;
 
     /**
      * Contains the PHPSESSID cookie is setted
      *
      * @var string
      */
-    private $PHPSESSID = null;
+    protected $PHPSESSID = null;
 
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
     # # # # # # # # # # # # # # # # # # # #
 
+    /**
+     * Initializes the connector.
+     */
     public function __construct()
     {
     }
