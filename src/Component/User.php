@@ -1,6 +1,7 @@
 <?php
 namespace EpitechAPI\Component;
 
+use EpitechAPI\Component\Marking\Modules;
 use EpitechAPI\Connector;
 use EpitechAPI\Tool\DataExtractor;
 
@@ -41,6 +42,13 @@ class User
      */
     protected $data;
 
+    /**
+     * Contains the « Marking » component.
+     *
+     * @var Modules
+     */
+    protected $modules = null;
+
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
     # # # # # # # # # # # # # # # # # # # #
@@ -74,6 +82,18 @@ class User
     # # # # # # # # # # # # # # # # # # # #
     #          Getters / Setters          #
     # # # # # # # # # # # # # # # # # # # #
+
+    /**
+     * Obtains the modules from « Marking » component
+     *
+     * @return Modules
+     */
+    public function getModules()
+    {
+        if ($this->modules == null)
+            $this->modules = new Modules($this->connector, $this->getLogin());
+        return $this->modules;
+    }
 
     /**
      * Obtains the picture Url.
