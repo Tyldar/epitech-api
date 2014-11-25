@@ -1,7 +1,6 @@
 <?php
 namespace EpitechAPI\Component;
 
-use EpitechAPI\IComponent;
 use EpitechAPI\Connector;
 use EpitechAPI\Tools\DataExtractor;
 
