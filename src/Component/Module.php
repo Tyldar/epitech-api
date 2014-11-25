@@ -47,6 +47,8 @@ class Module
         $url = str_replace(array('{SCHOOL_YEAR}', '{CODE_MODULE}', '{CODE_INSTANCE}'), array($school_year, $code_module, $code_instance), self::URL_MODULE);
         $response = $this->connector->request($url);
         $this->data = DataExtractor::retrieve($response);
+
+        print_r($this->data);
     }
 
     # # # # # # # # # # # # # # # # # # # #
