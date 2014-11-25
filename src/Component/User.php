@@ -197,16 +197,6 @@ class User
         return DataExtractor::extract($this->data, array('location'));
     }
 
-    /**
-     * Obtains the Connector.
-     *
-     * @return Connector
-     */
-    public function getConnector()
-    {
-        return $this->connector;
-    }
-
     # # # # # # # # # # # # # # # # # # # #
     #           Private Methods           #
     # # # # # # # # # # # # # # # # # # # #
