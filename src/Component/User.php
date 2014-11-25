@@ -54,6 +54,7 @@ class User
      */
     public function __construct(Connector $connector, $login = null)
     {
+        // If the use is not signed in, we can't use this component.
         if (!$connector->isSignedIn())
             throw new \Exception("The Connector is not signed in");
 
