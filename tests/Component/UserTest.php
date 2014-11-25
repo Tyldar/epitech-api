@@ -45,7 +45,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
 
     public function testUserInformation()
     {
-        foreach ($this->logins_to_test as $login => $expected) {
+        foreach ($this->logins_to_test as $login => $user_data_expected) {
             // Signing in using encrypted credentials
             $connector = new Connector();
             $connector->authenticate(Connector::SIGN_IN_METHOD_CREDENTIALS, $_SERVER['INTRANET_LOGIN'], $_SERVER['INTRANET_PASSWORD']);
@@ -67,7 +67,7 @@ class UserTest extends \PHPUnit_Framework_TestCase
                 $user->getPicture(),
             );
 
-            $this->assertEquals($expected, $user_data);
+            $this->assertEquals($user_data_expected, $user_data);
             $this->assertEquals($connector, $user->getConnector());
         }
     }

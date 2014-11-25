@@ -3,6 +3,7 @@ namespace EpitechAPI\Component;
 
 use EpitechAPI\IComponent;
 use EpitechAPI\Connector;
+use EpitechAPI\Tools\DataExtractor;
 
 /**
  * Class User represent an Epitech user.
@@ -35,13 +36,6 @@ class User
     protected $connector;
 
     /**
-     * Contains the User classes to avoid multi requests to intranet.
-     *
-     * @var array
-     */
-    static protected $users = array();
-
-    /**
      * Contains the user data.
      *
      * @var array
@@ -68,29 +62,14 @@ class User
 
         if ($login == null) {
             // If we don't have the signed in user in memory, get it
-            if (!array_key_exists('signed_in', User::$users)) {
-                $response = $this->connector->request(User::SIGNED_IN_USER_URL);
-                User::$users['signed_in'] = $this->parse($response);
-                $this->data = User::$users['signed_in'];
-                User::$users[$this->getLogin()] = User::$users['signed_in'];
-            }
-
-            // Retrieving in memory user
-            $this->data = User::$users['signed_in'];
+            $response = $this->connector->request(User::SIGNED_IN_USER_URL);
+            $this->data = $this->check($response);
         } else {
             // If we don't have the specified user in memory, get it
-            if (!array_key_exists($login, User::$users)) {
-                $response = $this->connector->request(str_replace('{LOGIN}', $login, User::USER_URL));
-                User::$users[$login] = $this->parse($response);
-            }
-
-            $this->data = User::$users[$login];
+            $response = $this->connector->request(str_replace('{LOGIN}', $login, User::USER_URL));
+            $this->data = $this->check($response);
         }
     }
-
-    # # # # # # # # # # # # # # # # # # # #
-    #            Public Methods           #
-    # # # # # # # # # # # # # # # # # # # #
 
     # # # # # # # # # # # # # # # # # # # #
     #          Getters / Setters          #
@@ -103,7 +82,7 @@ class User
      */
     public function getPicture()
     {
-        return $this->getData('picture');
+        return DataExtractor::extract($this->data, array('picture'));
     }
 
     /**
@@ -113,7 +92,7 @@ class User
      */
     public function getLogin()
     {
-        return $this->getData('login');
+        return DataExtractor::extract($this->data, array('login'));
     }
 
     /**
@@ -123,7 +102,7 @@ class User
      */
     public function getFirstName()
     {
-        return $this->getData('firstname');
+        return DataExtractor::extract($this->data, array('firstname'));
     }
 
     /**
@@ -133,7 +112,7 @@ class User
      */
     public function getLastName()
     {
-        return $this->getData('lastname');
+        return DataExtractor::extract($this->data, array('lastname'));
     }
 
     /**
@@ -143,7 +122,7 @@ class User
      */
     public function getFullName()
     {
-        return $this->getData('title');
+        return DataExtractor::extract($this->data, array('title'));
     }
 
     /**
@@ -153,7 +132,7 @@ class User
      */
     public function getIsClosed()
     {
-        return $this->getData('close');
+        return (bool)DataExtractor::extract($this->data, array('close'));
     }
 
     /**
@@ -163,7 +142,7 @@ class User
      */
     public function getIsAdmin()
     {
-        return $this->getData('admin');
+        return (bool)DataExtractor::extract($this->data, array('admin'));
     }
 
     /**
@@ -173,7 +152,7 @@ class User
      */
     public function getGroups()
     {
-        return $this->getData('groups');
+        return DataExtractor::extract($this->data, array('groups'));
     }
 
     /**
@@ -186,7 +165,7 @@ class User
         if (($groups = $this->getGroups())) {
             $groups_name = array();
             foreach ($groups as $group)
-                $groups_name[] = $group['name'];
+                $groups_name[] = DataExtractor::extract($group, array('name'));
             return $groups_name;
         }
         return null;
@@ -202,7 +181,7 @@ class User
         if (($groups = $this->getGroups())) {
             $groups_title = array();
             foreach ($groups as $group)
-                $groups_title[] = $group['title'];
+                $groups_title[] = DataExtractor::extract($group, array('title'));
             return $groups_title;
         }
         return null;
@@ -215,7 +194,7 @@ class User
      */
     public function getLocation()
     {
-        return $this->getData('location');
+        return DataExtractor::extract($this->data, array('location'));
     }
 
     /**
@@ -233,26 +212,13 @@ class User
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * Obtains the data for the specified key.
-     *
-     * @param string $key The data key.
-     * @return null|mixed
-     */
-    protected function getData($key)
-    {
-        if (array_key_exists($key, $this->data))
-            return $this->data[$key];
-        return null;
-    }
-
-    /**
-     * Parse the response
+     * Checks the response and returns its json content as array
      *
      * @param array $response The connector response
      * @return array The json response
      * @throws \Exception If the response code is not 200 or if the json response is null
      */
-    protected function parse($response)
+    protected function check($response)
     {
         // Shortcuts
         $code = $response['code'];
