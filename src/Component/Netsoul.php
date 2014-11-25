@@ -51,9 +51,10 @@ class Netsoul
 
         // Retrieving information about the specified user or signed in user
         if ($login == null)
-            $response = $this->connector->request(str_replace('{LOGIN}', $this->connector->getUser()->getLogin(), self::URL_NETSOUL));
+            $url = str_replace('{LOGIN}', $this->connector->getUser()->getLogin(), self::URL_NETSOUL);
         else
-            $response = $this->connector->request(str_replace('{LOGIN}', $login, self::URL_NETSOUL));
+            $url = str_replace('{LOGIN}', $login, self::URL_NETSOUL);
+        $response = $this->connector->request($url);
         $this->data = DataExtractor::retrieve($response);
 
         // Parsing the data

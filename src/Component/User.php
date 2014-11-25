@@ -67,9 +67,10 @@ class User
 
         // Retrieving information about the specified user or signed in user
         if ($login == null)
-            $response = $this->connector->request(self::URL_SIGNED_IN_USER);
+            $url = self::URL_SIGNED_IN_USER;
         else
-            $response = $this->connector->request(str_replace('{LOGIN}', $login, self::URL_USER));
+            $url = str_replace('{LOGIN}', $login, self::URL_USER);
+        $response = $this->connector->request($url);
         $this->data = DataExtractor::retrieve($response);
     }
 

@@ -50,6 +50,12 @@ class Connector
      */
     protected $PHPSESSID = null;
 
+    /**
+     * Contains the language chosen.
+     * @var string
+     */
+    protected $language = 'fr';
+
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
     # # # # # # # # # # # # # # # # # # # #
@@ -87,6 +93,7 @@ class Connector
             CURLOPT_TIMEOUT => 10,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Accept-Language: '.$this->language)
         ));
 
         // If the URL is using SSL we don't need to verify the certificate
@@ -277,8 +284,29 @@ class Connector
         return new User($this);
     }
 
-    # # # # # # # # # # # # # # # # # # # #
-    #           Private Methods           #
-    # # # # # # # # # # # # # # # # # # # #
+    /**
+     * Obtains the language.
+     *
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
 
+    /**
+     * Sets the language.
+     *
+     * @param string $language The language to use.
+     * @return $this This instance.
+     * @throws \InvalidArgumentException If the language is not accepted.
+     */
+    public function setLanguage($language)
+    {
+        if (!in_array($language, array('fr', 'en')))
+            throw new \InvalidArgumentException();
+        $this->language = $language;
+
+        return $this;
+    }
 }
