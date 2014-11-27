@@ -26,6 +26,13 @@ class Event
      */
     protected $connector = null;
 
+    /**
+     * Contains the related activity.
+     *
+     * @var Activity
+     */
+    protected $activity = null;
+
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
     # # # # # # # # # # # # # # # # # # # #
@@ -60,6 +67,88 @@ class Event
     # # # # # # # # # # # # # # # # # # # #
     #          Getters / Setters          #
     # # # # # # # # # # # # # # # # # # # #
+
+    /**
+     * Obtains the related activity.
+     *
+     * @return Activity
+     */
+    public function getActivity()
+    {
+        if ($this->activity == null)
+            $this->activity = new Activity($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode(), $this->getActivityCode());
+        return $this->activity;
+    }
+
+    /**
+     * Obtains the school year.
+     *
+     * @return int|null
+     */
+    public function getSchoolYear()
+    {
+        return DataExtractor::extract($this->data, array('scolaryear'));
+    }
+
+    /**
+     * Obtains the module code.
+     *
+     * @return string|null
+     */
+    public function getModuleCode()
+    {
+        return DataExtractor::extract($this->data, array('codemodule'));
+    }
+
+    /**
+     * Obtains the instance code.
+     *
+     * @return string|null
+     */
+    public function getInstanceCode()
+    {
+        return DataExtractor::extract($this->data, array('codeinstance'));
+    }
+
+    /**
+     * Obtains the activity code.
+     *
+     * @return string|null
+     */
+    public function getActivityCode()
+    {
+        return DataExtractor::extract($this->data, array('codeacti'));
+    }
+
+    /**
+     * Obtains the event code.
+     *
+     * @return string|null
+     */
+    public function getEventCode()
+    {
+        return DataExtractor::extract($this->data, array('codeevent'));
+    }
+
+    /**
+     * Obtains the title.
+     *
+     * @return string|null
+     */
+    public function getTitle()
+    {
+        return DataExtractor::extract($this->data, array('acti_title'));
+    }
+
+    /**
+     * Obtains the description.
+     *
+     * @return string|null
+     */
+    public function getDescription()
+    {
+        return DataExtractor::extract($this->data, array('acti_description'));
+    }
 
     # # # # # # # # # # # # # # # # # # # #
     #           Private Methods           #

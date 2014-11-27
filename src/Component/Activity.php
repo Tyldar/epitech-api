@@ -26,6 +26,20 @@ class Activity
      */
     protected $connector = null;
 
+    /**
+     * Contains the related module.
+     *
+     * @var Module
+     */
+    protected $module = null;
+
+    /**
+     * Contains the related events.
+     *
+     * @var array
+     */
+    protected $events = array();
+
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
     # # # # # # # # # # # # # # # # # # # #
@@ -56,9 +70,101 @@ class Activity
     #            Public Methods           #
     # # # # # # # # # # # # # # # # # # # #
 
+    /**
+     * Adds a related event.
+     *
+     * @param Event $event
+     */
+    public function addEvent(Event $event)
+    {
+        $this->events[$event->getEventCode()] = $event;
+    }
+
     # # # # # # # # # # # # # # # # # # # #
     #          Getters / Setters          #
     # # # # # # # # # # # # # # # # # # # #
+
+    /**
+     * Obtains the related events.
+     *
+     * @return array
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * Obtains the related module.
+     *
+     * @return Module
+     */
+    public function getModule()
+    {
+        if ($this->module == null)
+            $this->module = new Module($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode());
+        return $this->module;
+    }
+
+    /**
+     * Obtains the school year.
+     *
+     * @return int|null
+     */
+    public function getSchoolYear()
+    {
+        return DataExtractor::extract($this->data, array('scolaryear'));
+    }
+
+    /**
+     * Obtains the module code.
+     *
+     * @return string|null
+     */
+    public function getModuleCode()
+    {
+        return DataExtractor::extract($this->data, array('codemodule'));
+    }
+
+    /**
+     * Obtains the instance code.
+     *
+     * @return string|null
+     */
+    public function getInstanceCode()
+    {
+        return DataExtractor::extract($this->data, array('codeinstance'));
+    }
+
+    /**
+     * Obtains the activity code.
+     *
+     * @return string|null
+     */
+    public function getActivityCode()
+    {
+        return DataExtractor::extract($this->data, array('codeacti'));
+    }
+
+    /**
+     * Obtains the title.
+     *
+     * @return string|null
+     */
+    public function getTitle()
+    {
+        return DataExtractor::extract($this->data, array('title'));
+    }
+
+    /**
+     * Obtains the description.
+     *
+     * @return string|null
+     */
+    public function getDescription()
+    {
+        return DataExtractor::extract($this->data, array('description'));
+    }
 
     # # # # # # # # # # # # # # # # # # # #
     #           Private Methods           #

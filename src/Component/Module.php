@@ -26,6 +26,13 @@ class Module
      */
     protected $connector = null;
 
+    /**
+     * Contains the related activities.
+     *
+     * @var array
+     */
+    protected $activities = array();
+
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
     # # # # # # # # # # # # # # # # # # # #
@@ -55,9 +62,79 @@ class Module
     #            Public Methods           #
     # # # # # # # # # # # # # # # # # # # #
 
+    /**
+     * Adds a related activity.
+     *
+     * @param Activity $activity
+     */
+    public function addActivity(Activity $activity)
+    {
+        $this->activities[$activity->getActivityCode()] = $activity;
+    }
+
     # # # # # # # # # # # # # # # # # # # #
     #          Getters / Setters          #
     # # # # # # # # # # # # # # # # # # # #
+
+    /**
+     * Obtains the activities related to this module.
+     *
+     * @return array
+     */
+    public function getActivities()
+    {
+        return $this->activities;
+    }
+
+    /**
+     * Obtains the school year.
+     *
+     * @return int|null
+     */
+    public function getSchoolYear()
+    {
+        return DataExtractor::extract($this->data, array('scolaryear'));
+    }
+
+    /**
+     * Obtains the module code.
+     *
+     * @return string|null
+     */
+    public function getModuleCode()
+    {
+        return DataExtractor::extract($this->data, array('codemodule'));
+    }
+
+    /**
+     * Obtains the instance code.
+     *
+     * @return string|null
+     */
+    public function getInstanceCode()
+    {
+        return DataExtractor::extract($this->data, array('codeinstance'));
+    }
+
+    /**
+     * Obtains the title.
+     *
+     * @return string|null
+     */
+    public function getTitle()
+    {
+        return DataExtractor::extract($this->data, array('title'));
+    }
+
+    /**
+     * Obtains the description.
+     *
+     * @return string|null
+     */
+    public function getDescription()
+    {
+        return DataExtractor::extract($this->data, array('description'));
+    }
 
     # # # # # # # # # # # # # # # # # # # #
     #           Private Methods           #
