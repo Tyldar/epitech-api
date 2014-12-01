@@ -31,7 +31,7 @@ class Module
      *
      * @var array
      */
-    protected $activities = array();
+    protected $activities = null;
 
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
@@ -54,22 +54,6 @@ class Module
         $url = str_replace(array('{SCHOOL_YEAR}', '{CODE_MODULE}', '{CODE_INSTANCE}'), array($school_year, $code_module, $code_instance), self::URL_MODULE);
         $response = $this->connector->request($url);
         $this->data = DataExtractor::retrieve($response);
-
-        print_r($this->data);
-    }
-
-    # # # # # # # # # # # # # # # # # # # #
-    #            Public Methods           #
-    # # # # # # # # # # # # # # # # # # # #
-
-    /**
-     * Adds a related activity.
-     *
-     * @param Activity $activity
-     */
-    public function addActivity(Activity $activity)
-    {
-        $this->activities[$activity->getActivityCode()] = $activity;
     }
 
     # # # # # # # # # # # # # # # # # # # #
@@ -83,6 +67,15 @@ class Module
      */
     public function getActivities()
     {
+        if ($this->activities == null) {
+            $this->activities = array();
+            if (($activities = DataExtractor::extract($this->data, array('activites')))) {
+                foreach ($activities as $activity_data) {
+                    $activity = new Activity($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode(), DataExtractor::extract($activity_data, array('codeacti')));
+                    $this->activities[$activity->getActivityCode()] = $activity;
+                }
+            }
+        }
         return $this->activities;
     }
 
@@ -135,10 +128,5 @@ class Module
     {
         return DataExtractor::extract($this->data, array('description'));
     }
-
-    # # # # # # # # # # # # # # # # # # # #
-    #           Private Methods           #
-    # # # # # # # # # # # # # # # # # # # #
-
 }
  

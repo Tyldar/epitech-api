@@ -11,7 +11,7 @@ class Activity
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * The url to get module data replacing the {*} variables.
+     * The url to get activity data replacing the {*} variables.
      */
     const URL_ACTIVITY = 'https://intra.epitech.eu/module/{SCHOOL_YEAR}/{CODE_MODULE}/{CODE_INSTANCE}/{CODE_ACTIVITY}/?format=json';
 
@@ -38,7 +38,7 @@ class Activity
      *
      * @var array
      */
-    protected $events = array();
+    protected $events = null;
 
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
@@ -62,22 +62,6 @@ class Activity
         $url = str_replace(array('{SCHOOL_YEAR}', '{CODE_MODULE}', '{CODE_INSTANCE}', '{CODE_ACTIVITY}'), array($school_year, $code_module, $code_instance, $code_activity), self::URL_ACTIVITY);
         $response = $this->connector->request($url);
         $this->data = DataExtractor::retrieve($response);
-
-        print_r($this->data);
-    }
-
-    # # # # # # # # # # # # # # # # # # # #
-    #            Public Methods           #
-    # # # # # # # # # # # # # # # # # # # #
-
-    /**
-     * Adds a related event.
-     *
-     * @param Event $event
-     */
-    public function addEvent(Event $event)
-    {
-        $this->events[$event->getEventCode()] = $event;
     }
 
     # # # # # # # # # # # # # # # # # # # #
@@ -91,6 +75,16 @@ class Activity
      */
     public function getEvents()
     {
+        if ($this->events == null) {
+            $this->events = array();
+            if (($events = DataExtractor::extract($this->data, array('events')))) {
+                foreach ($events as $event_data) {
+                    $event = new Event($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode(), $this->getActivityCode(), DataExtractor::extract($event_data, array('code')));
+                    $this->events[$event->getEventCode()] = $event;
+                }
+            }
+        }
+
         return $this->events;
     }
 
@@ -103,6 +97,7 @@ class Activity
     {
         if ($this->module == null)
             $this->module = new Module($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode());
+
         return $this->module;
     }
 
@@ -165,10 +160,5 @@ class Activity
     {
         return DataExtractor::extract($this->data, array('description'));
     }
-
-    # # # # # # # # # # # # # # # # # # # #
-    #           Private Methods           #
-    # # # # # # # # # # # # # # # # # # # #
-
 }
  

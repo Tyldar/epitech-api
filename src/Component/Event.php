@@ -11,9 +11,14 @@ class Event
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * The url to get module data replacing the {*} variables.
+     * The url to get event data replacing the {*} variables.
      */
     const URL_EVENT = 'https://intra.epitech.eu/module/{SCHOOL_YEAR}/{CODE_MODULE}/{CODE_INSTANCE}/{CODE_ACTIVITY}/{CODE_EVENT}/?format=json';
+
+    /**
+     * The url to get the users registered to this event.
+     */
+    const URL_USER_REGISTERED = 'https://intra.epitech.eu/module/{SCHOOL_YEAR}/{CODE_MODULE}/{CODE_INSTANCE}/{CODE_ACTIVITY}/{CODE_EVENT}/registered?format=json';
 
     # # # # # # # # # # # # # # # # # # # #
     #              Attributes             #
@@ -32,6 +37,20 @@ class Event
      * @var Activity
      */
     protected $activity = null;
+
+    /**
+     * Contains the login of the registered users.
+     *
+     * @var array
+     */
+    protected $registered_users_login = null;
+
+    /**
+     * Contains the User object of the registered users.
+     *
+     * @var array
+     */
+    protected $registered_users = null;
 
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
@@ -56,17 +75,43 @@ class Event
         $url = str_replace(array('{SCHOOL_YEAR}', '{CODE_MODULE}', '{CODE_INSTANCE}', '{CODE_ACTIVITY}', '{CODE_EVENT}'), array($school_year, $code_module, $code_instance, $code_activity, $code_event), self::URL_EVENT);
         $response = $this->connector->request($url);
         $this->data = DataExtractor::retrieve($response);
-
-        print_r($this->data);
     }
-
-    # # # # # # # # # # # # # # # # # # # #
-    #            Public Methods           #
-    # # # # # # # # # # # # # # # # # # # #
 
     # # # # # # # # # # # # # # # # # # # #
     #          Getters / Setters          #
     # # # # # # # # # # # # # # # # # # # #
+
+    /**
+     * Obtains the users registered to this event.
+     *
+     * @param bool $as_object Whether the return type is an array of logins or an array of object User.
+     * @return array
+     */
+    public function getRegisteredUsers($as_object = false)
+    {
+        if ($this->registered_users_login == null) {
+            $this->registered_users_login = array();
+            $url = str_replace(array('{SCHOOL_YEAR}', '{CODE_MODULE}', '{CODE_INSTANCE}', '{CODE_ACTIVITY}', '{CODE_EVENT}'), array($this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode(), $this->getActivityCode(), $this->getEventCode()), self::URL_USER_REGISTERED);
+            $response = $this->connector->request($url);
+            $registered_users = DataExtractor::retrieve($response);
+
+            foreach ($registered_users as $registered_user)
+                $this->registered_users_login[$registered_user['login']] = $registered_user['login'];
+        }
+
+        if ($as_object) {
+            if ($this->registered_users == null) {
+                $this->registered_users = array();
+
+                foreach ($this->registered_users_login as $login)
+                    $this->registered_users[$login] = new User($this->connector, $login);
+            }
+
+            return $this->registered_users;
+        }
+
+        return $this->registered_users_login;
+    }
 
     /**
      * Obtains the related activity.
@@ -77,6 +122,7 @@ class Event
     {
         if ($this->activity == null)
             $this->activity = new Activity($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode(), $this->getActivityCode());
+
         return $this->activity;
     }
 
@@ -149,10 +195,5 @@ class Event
     {
         return DataExtractor::extract($this->data, array('acti_description'));
     }
-
-    # # # # # # # # # # # # # # # # # # # #
-    #           Private Methods           #
-    # # # # # # # # # # # # # # # # # # # #
-
 }
  
