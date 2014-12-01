@@ -1,12 +1,12 @@
 {
-    "name": "epitech-api/epitech-api",
+    "name": "raphy/epitech-api",
     "description": "An easy and modular API to request information from the Epitech's intranet",
     "license": "MIT",
     "authors": [
         {
             "name": "Raphael De Freitas",
             "email": "raphael.defreitas@epitech.eu",
-            "homepage": "http://raphael.de-freitas.com"
+            "homepage": "http://raphaeldefreitas.com"
         }
     ],
     "require": {

@@ -1,10 +1,15 @@
 <?php
 namespace EpitechAPI;
 
-use EpitechAPI\Component\User;
+use EpitechAPI\Components\Student;
 
 /**
- * Class Connector is the main class of the API. It allows request from intranet and authenticate an user.
+ * Class Connector manages the connection from the intranet.
+ * It initializes the connection and makes the requests for the components
+ *
+ * @package EpitechAPI
+ * @author  Raphael DE FREITAS <raphythegeek@gmail.com>
+ * @author  Antoine KNOCKAERT <knocka.a@gmail.com>
  */
 class Connector
 {
@@ -12,63 +17,70 @@ class Connector
     #              Constants              #
     # # # # # # # # # # # # # # # # # # # #
 
-    /**
-     * The sign in url.
-     */
-    const SIGN_IN_URL = 'https://intra.epitech.eu/?format=json';
-
-    /**
-     * Sign in using a login and a password.
-     */
-    const SIGN_IN_METHOD_CREDENTIALS = 0;
-
-    /**
-     * Sing in using the intranet session id (PHPSESSID).
-     */
-    const SIGN_IN_METHOD_PHPSESSID = 1;
-
-    /**
-     * Sing in using the intranet autologin link.
-     */
-    const SIGN_IN_METHOD_AUTOLOGIN_LINK = 2;
-
     # # # # # # # # # # # # # # # # # # # #
     #              Attributes             #
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * Contains whether the student is signed in.
+     * Contains the login
+     *
+     * @var string
+     */
+    protected $_login;
+
+    /**
+     * Contains the password
+     *
+     * @var string
+     */
+    protected $_password;
+
+    /**
+     * Contains the status of the authentication
      *
      * @var bool
      */
-    protected $isSignedIn = false;
+    protected $_is_signed_in;
 
     /**
-     * Contains the PHPSESSID cookie is setted
+     * Contains the cookies file name
      *
      * @var string
      */
-    protected $PHPSESSID = null;
+    protected $_cookies_file;
 
-    /**
-     * Contains the language chosen.
-     * @var string
-     */
-    protected $language = 'fr';
+    protected $_student;
 
     # # # # # # # # # # # # # # # # # # # #
-    #      Constructor / Destructor       #
+    #             Magic Methods           #
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * Initializes the connector.
+     * Initializes a new instance of this class and authenticates from the intranet with the specified login and password.
+     *
+     * @param string $login    The login for the authetication.
+     * @param string $password The associated Unix password.
      */
-    public function __construct()
+    public function __construct($login, $password)
     {
+        // Initializing the attributes
+        $this->_login        = $login;
+        $this->_password     = $password;
+        $this->_is_signed_in = false;
+        $this->_cookies_file = '/tmp/EpitechAPI_' . uniqid();
+        $this->_student      = null;
+
+        // Signing in
+        $this->sign_in();
     }
 
+    /**
+     * Destruct the class by deleting the cookie file for security reasons.
+     */
     public function __destruct()
     {
+        if (file_exists($this->_cookies_file))
+           unlink($this->_cookies_file);
     }
 
     # # # # # # # # # # # # # # # # # # # #
@@ -78,235 +90,104 @@ class Connector
     /**
      * Makes a cURL request to the specified intranet URL and obtains the response content.
      *
-     * @param string $url The URL where to make the request
-     * @param array $options The cURL options. See the PHP cURL curl_setopt() function documentation for more information.
+     * @param string $url     The URL where to make the request
+     * @param array  $options The cURL options. See the PHP cURL curl_setopt() function documentation for more information.
      *
-     * @return array|bool Returns an array containing the response information or FALSE on failure.
+     * @return array|bool Returns an array containing the string of the response content and the request status or FALSE on error.
      */
     public function request($url, $options = array())
     {
-        // Initializing cURL
+        // Making the cURL request
         $ch = curl_init($url);
 
-        // Setting the default options
+        // Setting the global options
         curl_setopt_array($ch, array(
-            CURLOPT_TIMEOUT => 10,
-            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT        => Settings::CURL_TIMEOUT,
+            CURLOPT_CONNECTTIMEOUT => Settings::CURL_TIMEOUT,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => array('Accept-Language: '.$this->language)
+            CURLOPT_COOKIESESSION  => true,
+            CURLOPT_COOKIEJAR      => $this->_cookies_file,
+            CURLOPT_COOKIEFILE     => $this->_cookies_file
         ));
 
-        // If the URL is using SSL we don't need to verify the certificate
-        if (preg_match('`^https://`i', $url) > 0) {
+        // Setting the specific options
+        if (preg_match('`^https://`i', $url)) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         }
 
-        // If we already have authenticated and have the PHPSESSID reuse it (it avoids to re authenticate before each request)
-        if ($this->PHPSESSID != null && !in_array(CURLOPT_COOKIE, $options))
-            curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $this->PHPSESSID);
-
-        // Setting the specific options
+        // Setting the parameter options
         curl_setopt_array($ch, $options);
 
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-
         // Executing the cURL request
-        $curl_response = curl_exec($ch);
-        if ($curl_response === false)
-            return (false);
+        $raw_response = curl_exec($ch);
 
-        // Here whe have to get the PHPSESSID cookie
-        list($header, $content) = explode("\r\n\r\n", $curl_response, 2);
-        if ($this->PHPSESSID == null) {
-            $phpsessid = str_replace("\r\n", " ", $header);
-            $this->PHPSESSID = preg_replace("/.*PHPSESSID=([^;]*);.*/", "\\1", $phpsessid);
+        if ($raw_response === false) {
+            return (false);
         }
 
-        // Building the response
-        $response = array(
-            'code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
-            'raw' => $content
+        $res = array(
+            'code'     => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+            'response' => $raw_response
         );
-        $content = str_replace("// Epitech JSON webservice ...\n", "", $content);
-        $response['json'] = json_decode($content, true);
 
-        /*
-         * The response array is formatted by the following :
-         * array (
-         *     'code' => integer (HTTP response code)
-         *     'raw' => string (HTTP response raw content)
-         *     'json' => array (the raw content parsed to JSON, /!\ CAN BE NULL IF JSON_DECODE() FAILED /!\)
-         * )
-         */
-
-        // Closing cURL
         curl_close($ch);
 
-        return $response;
+        return $res;
     }
 
     /**
-     * Sign in the student to the intranet.
+     * Obtains the authentication status.
      *
-     * @param int $method the authentication method
-     * @throws \InvalidArgumentException
-     */
-    public function authenticate($method)
-    {
-        // If the student is already signed in, do nothing
-        if ($this->isSignedIn())
-            return;
-
-        // Getting the function paremeters
-        $parameters = func_get_args();
-
-        switch ($method) {
-            /**
-             * Using the student login and unix password
-             */
-            case self::SIGN_IN_METHOD_CREDENTIALS:
-
-                // We expect the login and unix password parameters
-                if (count($parameters) != 3)
-                    throw new \InvalidArgumentException();
-
-                $login = $parameters[1];
-                $password = $parameters[2];
-
-                $sign_in_form = array(
-                    'login' => $login,
-                    'password' => $password,
-                    'remind' => true
-                );
-
-                $response = $this->request(self::SIGN_IN_URL, array(
-                    CURLOPT_FRESH_CONNECT => true,
-                    CURLOPT_COOKIESESSION => true,
-                    CURLOPT_POSTFIELDS => http_build_query($sign_in_form)
-                ));
-
-                // The authentication is done if the response code is 200 Ok
-                $this->isSignedIn = $response['code'] == 200;
-
-                break;
-
-            /**
-             * Using the student session id (the PHPSESSID cookie)
-             */
-            case self::SIGN_IN_METHOD_PHPSESSID:
-
-                // We expect an array
-                if (count($parameters) != 2)
-                    throw new \InvalidArgumentException();
-
-                $phpsessid = $parameters[1];
-
-                $response = $this->request(self::SIGN_IN_URL, array(
-                    CURLOPT_FRESH_CONNECT => true,
-                    CURLOPT_COOKIESESSION => true,
-                    CURLOPT_COOKIE => 'PHPSESSID=' . $phpsessid
-                ));
-                $this->PHPSESSID = $phpsessid;
-
-                // The authentication is done if the response code is 200 Ok
-                $this->isSignedIn = $response['code'] == 200;
-
-                break;
-
-            /**
-             * Using the student autologin link
-             */
-            case self::SIGN_IN_METHOD_AUTOLOGIN_LINK:
-
-                // We expect a link
-                if (count($parameters) != 2)
-                    throw new \InvalidArgumentException();
-
-                $link = $parameters[1];
-
-                $response = $this->request($link, array(
-                    CURLOPT_FRESH_CONNECT => true,
-                    CURLOPT_COOKIESESSION => true
-                ));
-
-                // The authentication is done if the response code is 302 Redirection
-                $this->isSignedIn = $response['code'] == 302;
-
-                break;
-            default:
-                throw new \InvalidArgumentException();
-        }
-    }
-
-    /**
-     * Whether the student is signed in.
-     *
-     * @return bool
+     * @return bool Returns TRUE if authenticated else FALSE.
      */
     public function isSignedIn()
     {
-        return $this->isSignedIn;
-    }
-
-    /**
-     * Checks if this Connector is signed in. It will throw an exception if not signed in.
-     *
-     * @throws \Exception
-     */
-    public function checkSignedIn()
-    {
-        if (!$this->isSignedIn())
-            throw new \Exception("EpitechAPI : Not Signed In");
+        return $this->_is_signed_in;
     }
 
     # # # # # # # # # # # # # # # # # # # #
-    #          Getters / Setters          #
+    #          Protected Methods          #
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * Obtains the PHPSESSID cookie
-     *
-     * @return string
+     * Authenticates from the intranet.
      */
-    public function getPHPSESSID()
+    protected function sign_in()
     {
-        return $this->PHPSESSID;
+        // Setting the form data
+        $post_data = array(
+            'login'    => $this->_login,
+            'password' => $this->_password,
+            'remind'   => true
+        );
+
+        $authentication = $this->request(Settings::URL_SIGN_IN, array(
+            CURLOPT_FRESH_CONNECT => true,
+            CURLOPT_POSTFIELDS    => http_build_query($post_data)
+        ));
+
+        // Checking the authentication
+        if ($authentication && !empty($authentication['response']) && $authentication['code'] == 200)
+            $this->_is_signed_in = true;
+        else
+            $this->_is_signed_in = false;
     }
+
+    # # # # # # # # # # # # # # # # # # # #
+    #         Getters and Setters         #
+    # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * Obtains the signed in User component.
+     * Obtains the Student object of the authenticated student.
      *
-     * @return User
+     * @return Student The Student object representing the student authenticated.
      */
-    public function getUser()
+    public function getStudent()
     {
-        return new User($this);
-    }
+        if ($this->_student == null)
+            $this->_student = new Student($this, $this->_login);
 
-    /**
-     * Obtains the language.
-     *
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->language;
+        return $this->_student;
     }
-
-    /**
-     * Sets the language.
-     *
-     * @param string $language The language to use.
-     * @return $this This instance.
-     * @throws \InvalidArgumentException If the language is not accepted.
-     */
-    public function setLanguage($language)
-    {
-        if (!in_array($language, array('fr', 'en')))
-            throw new \InvalidArgumentException();
-        $this->language = $language;
-
-        return $this;
-    }
-}
+} 
