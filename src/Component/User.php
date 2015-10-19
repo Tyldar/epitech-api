@@ -79,6 +79,16 @@ class User
     # # # # # # # # # # # # # # # # # # # #
 
     /**
+     * Obtains the intranet data
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
      * Obtains the « Netsoul » component.
      *
      * @return Netsoul
@@ -216,5 +226,15 @@ class User
     public function getLocation()
     {
         return DataExtractor::extract($this->data, array('location'));
+    }
+
+    /**
+     * Obtains the promotion
+     *
+     * @return null|int
+     */
+    public function getPromotion()
+    {
+        return DataExtractor::extract($this->data, array('promo'));
     }
 }
