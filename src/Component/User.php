@@ -128,7 +128,7 @@ class User
      */
     public function getFirstName()
     {
-        return DataExtractor::extract($this->data, array('firstname'));
+        return ucfirst(DataExtractor::extract($this->data, array('firstname')));
     }
 
     /**
@@ -138,7 +138,7 @@ class User
      */
     public function getLastName()
     {
-        return DataExtractor::extract($this->data, array('lastname'));
+        return ucfirst(DataExtractor::extract($this->data, array('lastname')));
     }
 
     /**
