@@ -20,3 +20,23 @@ You can read by starting at the [documentation main page](doc/index.md)
 # Modularity
 Since the components use the `EpitechAPI\Connector` class, the components can be diversified !
 You can contribute and share your own components for a better EpitechAPI !
+
+# Unit Tests
+The repository is tested by Travis-CI. To test the authentication, it must be provided valid Epitech credentials.
+So Travis-CI use encrypted variables for encrypt these information and it's impossible to make local test without using a script.
+
+The following script allow you make local unit tests, replace the values by yours :
+
+script : travis.sh
+```bash
+#!/bin/sh
+
+export INTRANET_LOGIN=login_x # Your login
+export INTRANET_PASSWORD=unix_password # Your password
+export INTRANET_AUTOLOGIN_LINK=url # The autologin link provided by intranet at https://intra.epitech.eu/admin/autolog
+
+composer update # Update or install the vendors
+
+./vendor/bin/phpunit # Run the unit tests
+
+```

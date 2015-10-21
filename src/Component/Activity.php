@@ -4,16 +4,16 @@ namespace EpitechAPI\Component;
 use EpitechAPI\Connector;
 use EpitechAPI\Tool\DataExtractor;
 
-class Module
+class Activity
 {
     # # # # # # # # # # # # # # # # # # # #
     #              Constants              #
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * The url to get module data replacing the {*} variables.
+     * The url to get activity data replacing the {*} variables.
      */
-    const URL_MODULE = 'https://intra.epitech.eu/module/{SCHOOL_YEAR}/{CODE_MODULE}/{CODE_INSTANCE}/?format=json';
+    const URL_ACTIVITY = 'https://intra.epitech.eu/module/{SCHOOL_YEAR}/{CODE_MODULE}/{CODE_INSTANCE}/{CODE_ACTIVITY}/?format=json';
 
     # # # # # # # # # # # # # # # # # # # #
     #              Attributes             #
@@ -27,11 +27,18 @@ class Module
     protected $connector = null;
 
     /**
-     * Contains the related activities.
+     * Contains the related module.
+     *
+     * @var Module
+     */
+    protected $module = null;
+
+    /**
+     * Contains the related events.
      *
      * @var array
      */
-    protected $activities = null;
+    protected $events = null;
 
     # # # # # # # # # # # # # # # # # # # #
     #      Constructor / Destructor       #
@@ -44,14 +51,15 @@ class Module
      * @param int $school_year The school year.
      * @param string $code_module The module code.
      * @param string $code_instance The instance code.
+     * @param string $code_activity The activity code.
      */
-    public function __construct(Connector $connector, $school_year, $code_module, $code_instance)
+    public function __construct(Connector $connector, $school_year, $code_module, $code_instance, $code_activity)
     {
         $connector->checkSignedIn();
         $this->connector = $connector;
 
-        // Retrieving information about the module
-        $url = str_replace(array('{SCHOOL_YEAR}', '{CODE_MODULE}', '{CODE_INSTANCE}'), array($school_year, $code_module, $code_instance), self::URL_MODULE);
+        // Retrieving information about the activity
+        $url = str_replace(array('{SCHOOL_YEAR}', '{CODE_MODULE}', '{CODE_INSTANCE}', '{CODE_ACTIVITY}'), array($school_year, $code_module, $code_instance, $code_activity), self::URL_ACTIVITY);
         $response = $this->connector->request($url);
         $this->data = DataExtractor::retrieve($response);
     }
@@ -61,22 +69,36 @@ class Module
     # # # # # # # # # # # # # # # # # # # #
 
     /**
-     * Obtains the activities related to this module.
+     * Obtains the related events.
      *
      * @return array
      */
-    public function getActivities()
+    public function getEvents()
     {
-        if ($this->activities == null) {
-            $this->activities = array();
-            if (($activities = DataExtractor::extract($this->data, array('activites')))) {
-                foreach ($activities as $activity_data) {
-                    $activity = new Activity($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode(), DataExtractor::extract($activity_data, array('codeacti')));
-                    $this->activities[$activity->getActivityCode()] = $activity;
+        if ($this->events == null) {
+            $this->events = array();
+            if (($events = DataExtractor::extract($this->data, array('events')))) {
+                foreach ($events as $event_data) {
+                    $event = new Event($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode(), $this->getActivityCode(), DataExtractor::extract($event_data, array('code')));
+                    $this->events[$event->getEventCode()] = $event;
                 }
             }
         }
-        return $this->activities;
+
+        return $this->events;
+    }
+
+    /**
+     * Obtains the related module.
+     *
+     * @return Module
+     */
+    public function getModule()
+    {
+        if ($this->module == null)
+            $this->module = new Module($this->connector, $this->getSchoolYear(), $this->getModuleCode(), $this->getInstanceCode());
+
+        return $this->module;
     }
 
     /**
@@ -107,6 +129,16 @@ class Module
     public function getInstanceCode()
     {
         return DataExtractor::extract($this->data, array('codeinstance'));
+    }
+
+    /**
+     * Obtains the activity code.
+     *
+     * @return string|null
+     */
+    public function getActivityCode()
+    {
+        return DataExtractor::extract($this->data, array('codeacti'));
     }
 
     /**
