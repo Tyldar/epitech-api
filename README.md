@@ -15,7 +15,8 @@ $ php composer.phar require raphy/epitech-api "2.*@dev"
 The main documentation can be found at the `doc` directory in this repository.
 You can read by starting at the [documentation main page](doc/index.md)
 
-The API documentation is built with [Sami](https://github.com/FriendsOfPHP/Sami). You can generate it by running the command:
+The API documentation is built with [Sami](https://github.com/FriendsOfPHP/Sami) and hosted on [GitHub Pages](https://pages.github.com/). It is available [here](http://raphy.github.io/epitech-api/master/).
+Generate the documentation by running the command:
 ``` bash
 $ composer sami
 ```
