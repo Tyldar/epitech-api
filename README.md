@@ -6,14 +6,19 @@ The EpitechAPI library uses PHP and its cURL extension
 * [PHP >= 5.4](http://www.php.net/)
 * [PHP cURL extension >= 7.0](http://php.net/manual/fr/book.curl.php/)
 
-You can use [Composer](https://getcomposer.org/) to add the `raphy/epitech-api` dependency with the command :
+You can use [Composer](https://getcomposer.org/) to add the `raphy/epitech-api` dependency with the command:
 ``` bash
 $ php composer.phar require raphy/epitech-api "2.*@dev"
 ```
 
 # Documentation
-The documentation can be found at the `doc` directory in this repository.
+The main documentation can be found at the `doc` directory in this repository.
 You can read by starting at the [documentation main page](doc/index.md)
+
+The API documentation is built with [Sami](https://github.com/FriendsOfPHP/Sami). You can generate it by running the command:
+``` bash
+$ composer sami
+```
 
 # Modularity
 Since the components use the `EpitechAPI\Connector` class, the components can be diversified!

@@ -13,3 +13,6 @@ composer.lock
 
 # Private scripts
 travis.sh
+
+# Sami build output
+sami
