@@ -12,12 +12,15 @@
     "require": {
         "php": ">=5.4",
         "lib-curl": "*"
-
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.31"
+        "phpunit/phpunit": "3.7.31",
+        "sami/sami": "~3.1.0"
     },
     "autoload": {
         "psr-4": { "EpitechAPI\\": "src" }
+    },
+    "scripts": {
+        "sami": "sami.php update .sami.php"
     }
 }
