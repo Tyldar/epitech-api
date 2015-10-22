@@ -7,7 +7,7 @@ The EpitechAPI library uses PHP and its cURL extension
 * [PHP cURL extension >= 7.0](http://php.net/manual/fr/book.curl.php/)
 
 You can use [Composer](https://getcomposer.org/) to add the `raphy/epitech-api` dependency with the command:
-``` bash
+``` sh
 php composer.phar require raphy/epitech-api "2.*@dev"
 ```
 
@@ -17,7 +17,7 @@ You can read by starting at the [documentation main page](doc/index.md)
 
 The API documentation is built with [Sami](https://github.com/FriendsOfPHP/Sami) and hosted on [GitHub Pages](https://pages.github.com/). It is available [here](http://raphy.github.io/epitech-api/master/).
 Generate the documentation by running the command:
-``` bash
+``` sh
 composer sami
 ```
 
