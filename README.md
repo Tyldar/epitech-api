@@ -1,4 +1,7 @@
 # EpitechAPI
+
+![](https://travis-ci.org/Raphy/epitech-api.svg?branch=master)
+
 An easy to use and modular API to request information from Epitech's intranet.
 
 ## Requirements
@@ -28,4 +31,4 @@ Since the components use the `EpitechAPI\Connector` class, the components can be
 You can contribute and share your own components for a better EpitechAPI!
 
 ## Unit Tests
-The repository is tested by Travis-CI.
+The repository is tested by [Travis-CI](https://travis-ci.org/). See the build status [here](https://travis-ci.org/Raphy/epitech-api).
