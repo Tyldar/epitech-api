@@ -21,6 +21,7 @@
         "psr-4": { "EpitechAPI\\": "src" }
     },
     "scripts": {
-        "sami": "sami.php update .sami.php"
+        "sami": "sami.php update .sami.php",
+        "phpunit": "phpunit"
     }
 }

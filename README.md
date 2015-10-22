@@ -32,3 +32,8 @@ You can contribute and share your own components for a better EpitechAPI!
 
 ## Unit Tests
 The repository is tested by [Travis-CI](https://travis-ci.org/). See the build status [here](https://travis-ci.org/Raphy/epitech-api).
+
+The unit tests are made with [PHPUnit](https://phpunit.de/). To launch the unit tests, run:
+``` sh
+composer phpunit
+```
