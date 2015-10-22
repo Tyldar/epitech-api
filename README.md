@@ -7,9 +7,9 @@ The EpitechAPI library has the following requirements:
 * [PHP cURL extension](http://php.net/manual/fr/book.curl.php/): *
 
 # Installation
-You can use [Composer](https://getcomposer.org/) to add the `raphy/epitech-api` dependency with the command:
+Install the library as a dependency via [Composer](https://getcomposer.org/):
 ``` sh
-php composer.phar require raphy/epitech-api "2.*@dev"
+composer require raphy/epitech-api
 ```
 
 # Documentation
