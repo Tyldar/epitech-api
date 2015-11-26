@@ -1,5 +1,7 @@
 # EpitechAPI
 
+*This repository is abandoned and the project is rewritten at [raphy/epitech-intranet](https://github.com/Raphy/epitech-intranet) *
+
 ![](https://travis-ci.org/Raphy/epitech-api.svg?branch=master)
 
 An easy to use and modular API to request information from Epitech's intranet.
